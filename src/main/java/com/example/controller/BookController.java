@@ -1,47 +1,43 @@
 package com.example.controller;
 
-import com.example.model.Books;
-import com.example.service.BooksService;
+import com.example.dto.BooksDto;
+import com.example.service.BooksServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 public class BookController {
 
     @Autowired
-    private BooksService booksService;
+    private BooksServiceImpl booksService;
 
     @PostMapping("/books")
-    public Books save(@RequestBody Books books)
-    {
-        booksService.save(books);
-        return books;
+    public ResponseEntity<BooksDto> save(@Valid @RequestBody BooksDto booksDto) {
+        return ResponseEntity.ok(booksService.save(booksDto));
     }
+
     @PutMapping("books/{bookId}")
-    public Books update(@RequestBody Books books, @PathVariable("bookId") int bookId)
-    {
-        booksService.update(books,bookId);
-        return books;
+    public ResponseEntity<BooksDto> update(@RequestBody BooksDto booksDto, @PathVariable("bookId") int bookId) {
+        booksService.update(booksDto, bookId);
+        return ResponseEntity.ok(booksService.save(booksDto));
     }
 
     @DeleteMapping("book/{bookId}")
-    public void deleteBooks(@PathVariable("bookId") int bookId)
-    {
+    public void deleteBooks(@PathVariable("bookId") int bookId) {
         booksService.delete(bookId);
     }
 
     @GetMapping("/book/{bookId}")
-    public Books getBooks(@PathVariable("bookId") int bookId)
-    {
+    public BooksDto getBooks(@PathVariable("bookId") int bookId) {
         return booksService.getBooksById(bookId);
     }
 
     @GetMapping("/book")
-    public List<Books> getAllBooks()
-    {
+    public List<BooksDto> getAllBooks() {
         return booksService.getAllBooks();
     }
 
